@@ -18,7 +18,7 @@ def inference(model, tokenized_sent, device):
             outputs = model(
                 input_ids=data['input_ids'].to(device),
                 attention_mask=data['attention_mask'].to(device),
-                token_type_ids=data['token_type_ids'].to(device)
+                # token_type_ids=data['token_type_ids'].to(device)
             )
         logits = outputs[0]
         logits = logits.detach().cpu().numpy()
@@ -45,14 +45,14 @@ def main(args):
     device = torch.device('cpu')
     # load tokenizer
     # "bert-base-multilingual-cased",kykim/bert-kor-base,xlm-roberta-large
-    TOK_NAME = "kykim/bert-kor-base"
-    tokenizer = AutoTokenizer.from_pretrained(
+    TOK_NAME = "xlm-roberta-large"
+    tokenizer = XLMRobertaTokenizer.from_pretrained(
         TOK_NAME)  # XLMRobertaTokenizer AutoTokenizer.from_pretrained(TOK_NAME)
 
     # load my model
     MODEL_NAME = args.model_dir  # model dir.
     # XLMRobertaForSequenceClassification BertForSequenceClassification.from_pretrained(args.model_dir)
-    model = BertForSequenceClassification.from_pretrained(args.model_dir)
+    model = XLMRobertaForSequenceClassification.from_pretrained(args.model_dir)
 
     model.parameters
     model.to(device)
@@ -69,7 +69,7 @@ def main(args):
 
     output = pd.DataFrame(pred_answer, columns=['pred'])
     output.to_csv(
-        './prediction/submission_sep_ent_kim_e4_b8_lr5e-5_not_train_val.csv', index=False)
+        './prediction/submission_sep_ent_roberta_e10_b32_lr1e-5_train_val.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     # model dir
     parser.add_argument('--model_dir', type=str,
-                        default="./results/checkpoint-4500")
+                        default="./results/checkpoint-2000")
     args = parser.parse_args()
     print(args)
     main(args)

@@ -70,6 +70,8 @@ def tokenized_dataset(dataset, tokenizer):
     special_tokens_dict = {'additional_special_tokens': [
         '[E1]', '[/E1]', '[E2]', '[/E2]']}
     tokenizer.add_special_tokens(special_tokens_dict)
+    tokenizer.sep_token = "[SEP]"
+    tokenizer.cls_token = "[CLS]"
 
     tokenized_sentences = tokenizer(
         concat_entity,
