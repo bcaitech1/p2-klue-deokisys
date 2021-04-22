@@ -69,7 +69,7 @@ def main(args):
 
     output = pd.DataFrame(pred_answer, columns=['pred'])
     output.to_csv(
-        './prediction/submission_sep_ent_roberta_e10_b32_lr1e-5_train_val.csv', index=False)
+        './prediction/submission_sep_ent_roberta_e10_b32_lr1e-5_all.csv', index=False)
 
 
 if __name__ == '__main__':
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
     # model dir
     parser.add_argument('--model_dir', type=str,
-                        default="./results/checkpoint-2000")
+                        default="./results/checkpoint-2500")
     args = parser.parse_args()
     print(args)
     main(args)

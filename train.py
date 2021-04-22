@@ -54,7 +54,7 @@ def train():
                sep='\t', header=None, index=False)
 
     # load dataset
-    train_dataset = load_data("/opt/ml/input/data/train/train_train.tsv")
+    train_dataset = load_data("/opt/ml/input/data/train/train.tsv")
     train_label = train_dataset['label'].values
 
     dev_dataset = load_data("/opt/ml/input/data/train/train_val.tsv")
@@ -130,7 +130,7 @@ def main():
     seed_everything(42)
     # wandb설정
     wandb.login()
-    wandb.init(project="bcai2-klue", name="rbreta-e10-b32-lr1e5_1",)
+    wandb.init(project="bcai2-klue", name="rbreta-e10-b32-lr1e5_1_alltrain",)
 
     train()
 
