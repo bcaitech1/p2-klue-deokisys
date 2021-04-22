@@ -1,6 +1,6 @@
 /prediction
 /origin
-/results
+/result*
 /wandb
 /.ipynb_checkpoints
 /__pycache__
