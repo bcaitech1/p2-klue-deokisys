@@ -38,8 +38,8 @@ def compute_metrics(pred):
 def train():
     # load model and tokenizer
     # "bert-base-multilingual-cased",kykim/bert-kor-base,roberta-large-mnli
-    MODEL_NAME = "kykim/bert-kor-base"
-    tokenizer = AutoTokenizer.from_pretrained(  # roberta기준
+    MODEL_NAME = "xlm-roberta-large"
+    tokenizer = XLMRobertaTokenizer.from_pretrained(  # roberta기준
         MODEL_NAME)  # XLMRobertaTokenizer AutoTokenizer.from_pretrained(MODEL_NAME)
     # autoTokenizer로 자동으로 가져온다.
 
@@ -57,7 +57,7 @@ def train():
     train_dataset = load_data("/opt/ml/input/data/train/train.tsv")
     train_label = train_dataset['label'].values
 
-    dev_dataset = load_data("/opt/ml/input/data/train/train.tsv")
+    dev_dataset = load_data("/opt/ml/input/data/train/train_val.tsv")
     dev_label = dev_dataset['label'].values
 
     # tokenizing dataset
@@ -71,13 +71,13 @@ def train():
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
     # setting model hyperparameter
-    bert_config = BertConfig.from_pretrained(
+    bert_config = XLMRobertaConfig.from_pretrained(
         MODEL_NAME)  # XLMRobertaConfig,BertConfig.from_pretrained(MODEL_NAME)
     # print(bert_config)
 
     # bert_config.vocab_size = 42004  # 4개 추가 안됨
     bert_config.num_labels = 42
-    model = AutoModelForSequenceClassification.from_pretrained(  # XLMRobertaForSequenceClassification AutoModelForSequenceClassification.from_pretrained(
+    model = XLMRobertaForSequenceClassification.from_pretrained(  # XLMRobertaForSequenceClassification AutoModelForSequenceClassification.from_pretrained(
         MODEL_NAME, config=bert_config)
     model.resize_token_embeddings(len(tokenizer))  # 새로운 토큰 추가로 임베딩 크기 조정
     # model = BertForSequenceClassification(bert_config)  # from_pretrained가져오기
@@ -90,9 +90,9 @@ def train():
         output_dir='./results',          # output directory
         save_total_limit=3,              # number of total save model.
         save_steps=500,                 # model saving step.
-        num_train_epochs=4,              # total number of training epochs
-        learning_rate=5e-5,               # learning_rate
-        per_device_train_batch_size=8,  # batch size per device during training
+        num_train_epochs=10,              # total number of training epochs
+        learning_rate=1e-5,               # learning_rate
+        per_device_train_batch_size=32,  # batch size per device during training
         warmup_steps=500,                # number of warmup steps for learning rate scheduler
         weight_decay=0.01,               # strength of weight decay
         logging_dir='./logs',            # directory for storing logs
@@ -130,7 +130,7 @@ def main():
     seed_everything(42)
     # wandb설정
     wandb.login()
-    wandb.init(project="bcai2-klue", name="kim-e4-b8_lr5e-5_notval",)
+    wandb.init(project="bcai2-klue", name="rbreta-e10-b32-lr1e5_1_alltrain",)
 
     train()
 
